@@ -64,6 +64,7 @@ fail('regExp validator', user => user.customerId = 'missing')
 fail('eMail validator', user => user.email = 'invalid@address')
 fail('enum validator', user => user.favoriteDay = 'test')
 fail('required validator', 'rating')
+fail('custom validator', user => user.odd = 2)
 
 pass('min validator', user => user.age = 1)
 pass('max validator', user => user.age = 22)
@@ -76,3 +77,4 @@ pass('required validator', 'rating', rating => {
     rating.userId = 1
     rating.value = 3
 })
+pass('custom validator', user => user.odd = 1)

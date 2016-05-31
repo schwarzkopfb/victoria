@@ -10,8 +10,8 @@ const Database = require('..'),
 db.define('user', {
     username: {
         type:      String,
-        minLength: 2,
-        maxLength: 5
+        minlength: 2,
+        max_length: 5
     },
     age: {
         type: Number,
@@ -33,6 +33,10 @@ db.define('user', {
     maxLengthTest: {
         type:      String,
         maxLength: -1 // pointless
+    },
+    odd: {
+        type: Number,
+        validate: value => value % 2
     }
 })
 
