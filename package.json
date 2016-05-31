@@ -3,10 +3,17 @@
   "version": "0.0.1",
   "description": "Simple object-hash relational mapper library for Redis, targeting Node.js 6 and above.",
   "main": "./index.js",
+  "scripts": {
+    "test": "tap test/{api,validators}.js",
+    "coverage": "npm run test -- --cov --coverage-report=lcov"
+  },
   "dependencies": {
     "redis": "^2.6.0-2"
   },
   "engines": {
     "node": ">=6"
+  },
+  "devDependencies": {
+    "tap": "^5.7.2"
   }
 }
