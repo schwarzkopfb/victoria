@@ -8,25 +8,25 @@ const Database = require('..'),
       db       = new Database
 
 db.define('user', {
-    username: {
-        type:      String,
-        minlength: 2,
+    username:      {
+        type:       String,
+        minlength:  2,
         max_length: 5
     },
-    age: {
+    age:           {
         type: Number,
         min:  0,
         max:  99
     },
-    email: {
+    email:         {
         type:  String,
         email: true
     },
-    customerId: {
+    customerId:    {
         type:  String,
         match: /[A-Z]-[1-9][0-9]{3}-[1-9][0-9]{3}/
     },
-    favoriteDay: {
+    favoriteDay:   {
         type: String,
         enum: [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ]
     },
@@ -34,23 +34,44 @@ db.define('user', {
         type:      String,
         maxLength: -1 // pointless
     },
-    odd: {
-        type: Number,
+    odd:           {
+        type:     Number,
         validate: value => value % 2
     }
 })
 
+const hostname   = require('os').hostname,
+      createHash = require('crypto').createHash
+
 db.define('rating', {
     userId: {
-        type: String,
+        type:     String,
         required: true
     },
 
     value: {
-        type: Number,
+        type:     Number,
         required: true,
-        min: 1,
-        max: 5
+        min:      1,
+        max:      5
+    },
+
+    text: {
+        type:    String,
+        default: '-'
+    },
+
+    timestamp: {
+        type:    Date,
+        default: Date.now
+    },
+
+    // store a unique machine identifier,
+    // where the entity has been created
+    // it's a demo of dynamic default values
+    origin: {
+        type:    String,
+        default: () => createHash('md5').update(hostname()).digest('hex')
     }
 })
 
