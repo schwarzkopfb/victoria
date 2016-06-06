@@ -72,7 +72,18 @@ const hostname   = require('os').hostname,
           // it's a demo of dynamic default values
           origin: {
               type:    String,
-              default: () => createHash('md5').update(hostname()).digest('hex')
+              default: () => createHash('md5').update(hostname())
+                                              .digest('hex')
+          },
+
+          month: {
+              setter: value => value.getMonth()
+          },
+
+          reverseText: {
+              getter: value => Array.from(value)
+                                    .reverse()
+                                    .join('')
           }
       }
 

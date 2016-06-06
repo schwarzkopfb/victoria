@@ -34,25 +34,21 @@ tap.throws(
 
 tap.test('Model inspections', test => {
     let user = db.create('user'),
-        def  = {
-            username:      undefined,
-            age:           undefined,
-            email:         undefined,
-            customerId:    undefined,
-            favoriteDay:   undefined,
-            maxLengthTest: undefined,
-            odd:           undefined
-        },
-        ins  = `{ username: undefined,
-  age: undefined,
-  email: undefined,
-  customerId: undefined,
-  favoriteDay: undefined,
-  maxLengthTest: undefined,
-  odd: undefined }`
+        def  = { age: 42 },
+        ins  = '{ age: 42 }'
+
+    test.type(user, Model, '`db.create()` should return a Model instance')
+    test.equal(user.toString(), '[object Model]')
 
     test.same(user, {}, 'an empty model should look like a hash without keys')
-    test.same(user.toJSON(), def, "an empty model's json representation should be initialized correctly")
+    test.same(user.toJSON(), {}, "an empty model's json should look like a hash without keys")
+    test.same(user.inspect(), {}, '`model.inspect()` should be just an alias for `model.toJSON()`')
+    test.equal(inspect(user), '{}', 'model should be inspected correctly')
+
+    user.age = 42
+
+    test.same(user, def, 'model should contain the initialized fields')
+    test.same(user.toJSON(), def, "an empty model's json should contain the initialized fields")
     test.same(user.inspect(), def, '`model.inspect()` should be just an alias for `model.toJSON()`')
     test.equal(inspect(user), ins, 'model should be inspected correctly')
 
@@ -94,7 +90,6 @@ tap.test('Model default values', test => {
 tap.test('Model methods', test => {
     const user = db.create('user')
 
-    test.type(user, Model, '`db.create()` should return a Model instance')
     test.doesNotThrow(
         () => user.validate(),
         'an empty model should be valid'
@@ -104,6 +99,23 @@ tap.test('Model methods', test => {
     user.username = 'schb'
     test.ok(Model.hasChanged(user), 'model changed')
     test.same(Model.getSchema(user), db.schemas.user, 'a schema should be predetermined')
+
+    test.end()
+})
+
+tap.test('Model getters/setters', test => {
+    const now    = new Date,
+          user   = db.create('user', {
+              age: '42'
+          }),
+          rating = db.create('rating', {
+              reverseText: '!yrotciv',
+              month:       now
+          })
+
+    test.type(rating.timestamp, Date, 'date getter should return a Date instance')
+    test.equal(rating.month, now.getMonth(), 'custom setter should be applied')
+    test.equal(rating.reverseText, 'victory!', 'custom getter should return proper values')
 
     test.end()
 })
@@ -118,3 +130,22 @@ tap.test('Schema methods', test => {
 
     test.end()
 })
+
+
+console.log('!!!!!!!!!!')
+const user = db.create('user', { age: 42 })
+
+console.log(user.age)
+console.log('age' in user)
+console.log(Object.keys(user))
+console.log(Object.getOwnPropertyNames(user))
+console.log(user.toString())
+console.log(JSON.stringify(user))
+
+for (let key in user)
+    console.log(key)
+
+// for (let val of user)
+//     console.log(val)
+
+console.log('!!!!!!!!!!')
