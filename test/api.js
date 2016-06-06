@@ -52,6 +52,26 @@ tap.test('Model inspections', test => {
     test.same(user.inspect(), def, '`model.inspect()` should be just an alias for `model.toJSON()`')
     test.equal(inspect(user), ins, 'model should be inspected correctly')
 
+    test.equal(user.age, 42, 'model property should be accessible')
+    test.notOk('username' in user, '`in` operator should work properly on models')
+    test.ok('age' in user, '`in` operator should work properly on models')
+    test.same(Object.keys(user), [ 'age' ], '`Object.keys()` should return only the keys of the changeset')
+    test.same(Object.getOwnPropertyNames(user), [ 'age' ], '`Object.keys()` should return only the keys of the changeset')
+    test.equal(user.toString(), '[object Model]', 'model string tag should be set properly')
+    test.equal(JSON.stringify(user), '{"age":42}', 'result of JSON serialisation should contain the changed keys')
+
+    let res = []
+    for (let key in user)
+        res.push(key)
+
+    test.same(res, [ 'age' ], '`for...in` should enumerate correctly')
+
+    res = []
+    for (let val of user)
+        res.push(val)
+
+    test.same(res, [ 42 ], '`for...of` should iterate correctly')
+
     test.end()
 })
 
@@ -98,6 +118,7 @@ tap.test('Model methods', test => {
     test.same(Model.getChangeSet(user), {}, 'model not changed')
     user.username = 'schb'
     test.ok(Model.hasChanged(user), 'model changed')
+    test.same(Model.getChangeSet(user), { username: 'schb' }, 'model changed')
     test.same(Model.getSchema(user), db.schemas.user, 'a schema should be predetermined')
 
     test.end()
@@ -130,22 +151,3 @@ tap.test('Schema methods', test => {
 
     test.end()
 })
-
-
-console.log('!!!!!!!!!!')
-const user = db.create('user', { age: 42 })
-
-console.log(user.age)
-console.log('age' in user)
-console.log(Object.keys(user))
-console.log(Object.getOwnPropertyNames(user))
-console.log(user.toString())
-console.log(JSON.stringify(user))
-
-for (let key in user)
-    console.log(key)
-
-// for (let val of user)
-//     console.log(val)
-
-console.log('!!!!!!!!!!')
