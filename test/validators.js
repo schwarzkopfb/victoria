@@ -7,11 +7,20 @@
 const tap = require('tap'),
       db  = require('./database')
 
+function noop() {
+}
+
 function test(name, schema, fn, resolved, rejected) {
     if (typeof schema !== 'string') {
         fn     = schema
         schema = 'user'
     }
+
+    if (!resolved)
+        resolved = noop
+
+    if (!rejected)
+        rejected = noop
 
     let entity = db.create(schema)
 
@@ -19,25 +28,24 @@ function test(name, schema, fn, resolved, rejected) {
         fn(entity)
 
     tap.test(name, test => {
-        entity.save()
-              .then(resolved.bind(null, test))
-              .catch(rejected.bind(null, test))
+        try {
+            entity.validate()
+            resolved(test, entity)
+        }
+        catch (ex) {
+            test.type(ex, 'ValidationError')
+            rejected(test, ex)
+        }
+
+        test.end()
     })
 }
 
 function fail(name, schema, fn) {
     test(
         name, schema, fn,
-
-        (test, res) => {
+        (test, res) =>
             test.notOk(res, 'unexpected result')
-            test.end()
-        },
-
-        (test, err) => {
-            test.type(err, 'ValidationError')
-            test.end()
-        }
     )
 }
 
@@ -45,10 +53,8 @@ function pass(name, schema, fn) {
     test(
         name, schema, fn,
 
-        (test, res) => {
-            test.ok(res, 'result expected')
-            test.end()
-        },
+        (test, res) =>
+            test.ok(res, 'result expected'),
 
         (test, err) => test.threw(err)
     )
@@ -63,7 +69,7 @@ fail('maxLength validator', user => user.maxLengthTest = '')
 fail('regExp validator', user => user.customerId = 'missing')
 fail('eMail validator', user => user.email = 'invalid@address')
 fail('enum validator', user => user.favoriteDay = 'test')
-fail('required validator', 'rating')
+fail('required validator', 'rating', rating => rating.value = null)
 fail('custom validator', user => user.odd = 2)
 
 pass('min validator', user => user.age = 1)
@@ -75,6 +81,6 @@ pass('eMail validator', user => user.email = 'schwarzkopfb@icloud.com')
 pass('enum validator', user => user.favoriteDay = 'fri')
 pass('required validator', 'rating', rating => {
     rating.userId = 1
-    rating.value = 3
+    rating.value  = 3
 })
 pass('custom validator', user => user.odd = 1)

@@ -7,7 +7,7 @@
 const Database = require('..'),
       db       = new Database
 
-db.define('user', {
+const user = {
     username:      {
         type:       String,
         minlength:  2,
@@ -38,41 +38,49 @@ db.define('user', {
         type:     Number,
         validate: value => value % 2
     }
-})
+}
+
+db.define('user', user)
 
 const hostname   = require('os').hostname,
-      createHash = require('crypto').createHash
+      createHash = require('crypto').createHash,
+      rating     = {
+          userId: {
+              type:     String,
+              required: true
+          },
 
-db.define('rating', {
-    userId: {
-        type:     String,
-        required: true
-    },
+          value: {
+              type:     Number,
+              required: true,
+              min:      1,
+              max:      5
+          },
 
-    value: {
-        type:     Number,
-        required: true,
-        min:      1,
-        max:      5
-    },
+          text: {
+              type:    String,
+              default: '-'
+          },
 
-    text: {
-        type:    String,
-        default: '-'
-    },
+          timestamp: {
+              type:    Date,
+              default: Date.now
+          },
 
-    timestamp: {
-        type:    Date,
-        default: Date.now
-    },
+          // store a unique machine identifier,
+          // where the entity has been created
+          // it's a demo of dynamic default values
+          origin: {
+              type:    String,
+              default: () => createHash('md5').update(hostname()).digest('hex')
+          }
+      }
 
-    // store a unique machine identifier,
-    // where the entity has been created
-    // it's a demo of dynamic default values
-    origin: {
-        type:    String,
-        default: () => createHash('md5').update(hostname()).digest('hex')
-    }
-})
+db.define('rating', rating)
 
 module.exports = db
+
+exports.schemas = {
+    user,
+    rating
+}
