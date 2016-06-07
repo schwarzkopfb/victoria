@@ -10,28 +10,6 @@ const { AssertionError } = require('assert'),
       tap = require('tap'),
       db  = require('./database')
 
-tap.doesNotThrow(
-    () => db.create('user'),
-    'schema name should be asserted'
-)
-
-tap.throws(
-    () => db.create('fake'), // absent schema type
-    AssertionError,
-    'schema name should be asserted'
-)
-
-tap.doesNotThrow(
-    () => db.create('user').username = 'test',
-    'field name should be asserted'
-)
-
-tap.throws(
-    () => db.create('user').invalidField = true, // absent field name
-    AssertionError,
-    'field name should be asserted'
-)
-
 tap.test('Model inspections', test => {
     let user = db.create('user'),
         def  = { age: 42 },
@@ -134,9 +112,28 @@ tap.test('Model getters/setters', test => {
               month:       now
           })
 
-    test.type(rating.timestamp, Date, 'date getter should return a Date instance')
     test.equal(rating.month, now.getMonth(), 'custom setter should be applied')
     test.equal(rating.reverseText, 'victory!', 'custom getter should return proper values')
+
+    test.type(rating.timestamp, Date, 'date getter should return a Date instance')
+    rating.timestamp = 'invalid'
+    test.ok(isNaN(rating.timestamp), 'date getter should return NaN if the value is invalid')
+    rating.timestamp = now
+    const num = +now
+    test.equal(+rating.timestamp, num, 'date getter')
+    rating.timestamp = num
+    test.equal(+rating.timestamp, num, 'date getter')
+
+    user.verified = true
+    test.equal(user.verified, true, 'boolean getter')
+    user.verified = 0
+    test.equal(user.verified, false, 'boolean getter')
+    user.verified = Object
+    test.equal(user.verified, true, 'boolean getter')
+    user.verified = ''
+    test.equal(user.verified, false, 'boolean getter')
+    user.verified = 'true'
+    test.equal(user.verified, true, 'boolean getter')
 
     test.end()
 })
@@ -148,6 +145,76 @@ tap.test('Schema methods', test => {
 
     test.same(schema.toJSON(), desc, "a schema's json representation should be its descriptor")
     test.same(schema.inspect(), desc, '`schema.inspect()` should be just an alias for `schema.toJSON()`')
+
+    test.end()
+})
+
+tap.test('Schema definition assertions', test => {
+    test.doesNotThrow(
+        () => db.create('user'),
+        'schema name should be asserted'
+    )
+    test.throws(
+        () => db.create('fake'), // absent schema type
+        AssertionError,
+        'schema name should be asserted'
+    )
+    test.doesNotThrow(
+        () => db.create('user').username = 'test',
+        'field name should be asserted'
+    )
+    test.throws(
+        () => db.create('user').invalidField = true, // absent field name
+        AssertionError,
+        'field name should be asserted'
+    )
+    test.throw(
+        () => db.define('test', { a: { type: 1 } }),
+        TypeError,
+        '`1` is an invalid type specifier'
+    )
+    test.throw(
+        () => db.define('test', { a: { type: 'a' } }),
+        TypeError,
+        '`\'a\'` is an invalid type specifier'
+    )
+    test.throw(
+        () => db.define('test', { a: Buffer }),
+        TypeError,
+        '`Buffer` is an invalid type specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test1', { a: String }),
+        '`String` is a valid type specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test2', { a: Number }),
+        '`Number` is a valid type specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test3', { a: Boolean }),
+        '`Boolean` is a valid type specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test4', { a: Date }),
+        '`Date` is a valid type specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test5', { a: 'a' }),
+        '`\'a\'` is a valid specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test6', { a: 1 }),
+        '`1` is a valid specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test7', { a: true }),
+        '`true` is a valid specifier'
+    )
+    test.doesNotThrow(
+        () => db.define('test8', { a: new Date }),
+        '`Date` instance is a valid specifier'
+    )
 
     test.end()
 })

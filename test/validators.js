@@ -71,6 +71,8 @@ fail('eMail validator', user => user.email = 'invalid@address')
 fail('enum validator', user => user.favoriteDay = 'test')
 fail('required validator', 'rating', rating => rating.value = null)
 fail('custom validator', user => user.odd = 2)
+fail('date validator', user => user.birthDate = 'invalid')
+fail('date validator', user => user.birthDate = -1)
 
 pass('min validator', user => user.age = 1)
 pass('max validator', user => user.age = 22)
@@ -84,3 +86,5 @@ pass('required validator', 'rating', rating => {
     rating.value  = 3
 })
 pass('custom validator', user => user.odd = 1)
+pass('date validator', user => user.birthDate = 1)
+pass('date validator', user => user.birthDate = new Date)

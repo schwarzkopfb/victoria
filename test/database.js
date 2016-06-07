@@ -4,6 +4,9 @@
 
 'use strict'
 
+// todo: replace 'tap' dev dependency, once my PR gets merged
+Object.prototype.extension = 'should not mess up anything'
+
 const Database = require('..'),
       db       = new Database
 
@@ -18,10 +21,12 @@ const user = {
         min:  0,
         max:  99
     },
+    birthDate: Date,
     email:         {
         type:  String,
         email: true
     },
+    verified:      Boolean,
     customerId:    {
         type:  String,
         match: /[A-Z]-[1-9][0-9]{3}-[1-9][0-9]{3}/
@@ -87,7 +92,7 @@ const hostname   = require('os').hostname,
           }
       }
 
-db.define('rating', rating)
+db.define({ rating })
 
 module.exports = db
 
