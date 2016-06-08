@@ -10,6 +10,9 @@ const //tap = require('tap'),
 
 db.connect(url)
 
+// WARNING: this drops all the data in the selected database!
+db.client.flushdb()
+
 db.client.keys('*', (err, keys) => {
     if (err)
         console.error(err.stack)
