@@ -22,6 +22,9 @@ const user = {
         max:  99
     },
     birthDate: Date,
+    birthYear: {
+        length: 4
+    },
     email:         {
         type:  String,
         email: true
