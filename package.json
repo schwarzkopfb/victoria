@@ -4,7 +4,7 @@
   "description": "Simple object-hash relational mapper library for Redis, targeting Node.js 6 and above.",
   "main": "./index.js",
   "scripts": {
-    "test": "tap test/{api,validators}.js",
+    "test": "tap test/{api,model,validators}.js",
     "coverage": "npm run test -- --cov --coverage-report=lcov"
   },
   "dependencies": {
@@ -14,6 +14,7 @@
     "node": ">=6"
   },
   "devDependencies": {
+    "co": "^4.6.0",
     "tap": "schwarzkopfb/node-tap"
   }
 }

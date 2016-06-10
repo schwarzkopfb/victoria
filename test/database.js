@@ -97,6 +97,11 @@ const hostname   = require('os').hostname,
 
 db.define({ rating })
 
+db.on('error', err => {
+    console.error(err && err.stack || err || 'unknown client error')
+    process.exit(1)
+})
+
 module.exports = db
 
 exports.schemas = {

@@ -74,6 +74,7 @@ fail('custom validator', user => user.odd = 2)
 fail('date validator', user => user.birthDate = 'invalid')
 fail('date validator', user => user.birthDate = -1)
 fail('length validator', user => user.birthYear = '93')
+fail('length validator', user => user.birthYear = null)
 
 pass('min validator', user => user.age = 1)
 pass('max validator', user => user.age = 22)
