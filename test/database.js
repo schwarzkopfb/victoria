@@ -21,8 +21,8 @@ const user = {
         min:  0,
         max:  99
     },
-    birthDate: Date,
-    birthYear: {
+    birthDate:     Date,
+    birthYear:     {
         length: 4
     },
     email:         {
@@ -50,9 +50,9 @@ const user = {
 
 db.define('user', user)
 
-const hostname   = require('os').hostname,
-      createHash = require('crypto').createHash,
-      rating     = {
+const { hostname }  = require('os'),
+      { createHash } = require('crypto'),
+      rating = {
           userId: {
               type:     String,
               required: true
@@ -77,7 +77,7 @@ const hostname   = require('os').hostname,
 
           // store a unique machine identifier,
           // where the entity has been created
-          // it's a demo of dynamic default values
+          // it's a test of dynamic default values
           origin: {
               type:    String,
               default: () => createHash('md5').update(hostname())
