@@ -38,12 +38,25 @@ db.define({ user })
 // WARNING: this drops all the data in the selected database!
 db.client.flushdb()
 
-test.test('custom id generator function', test => {
+test.test('custom id generator function #1', test => {
     db.create('user', { name: 'test' })
       .save()
       .then(user => {
           test.equal(user.id, 1, 'model should have a numeric id')
           test.end()
+          next()
       })
       .catch(test.threw)
 })
+
+function next() {
+    test.test('custom id generator function #2', test => {
+        db.create('user', { name: 'test2' })
+          .save()
+          .then(user => {
+              test.equal(user.id, 2, 'model should have a numeric id')
+              test.end()
+          })
+          .catch(test.threw)
+    })
+}
