@@ -95,7 +95,7 @@ tap.test('Schema definition assertions', test => {
 tap.test('Database api', test => {
     test.throws(
         () => db.client = 42,
-        AssertionError,
+        TypeError,
         'database.client should be asserted'
     )
 
@@ -113,8 +113,16 @@ tap.test('Database api', test => {
         }, {})
         test.same(db.settings, expected)
 
-        // references
-        // todo
+        // reference
+        Database.defaultSettings.test = 'test'
+        test.equal(db.settings.test, undefined, 'default settings object should be cloned')
+        const obj    = { a: 1 },
+              testDb = new Database(obj)
+        test.equal(testDb.settings.a, 1, 'provided settings object should be cloned')
+        obj.b = 2
+        test.equal(testDb.settings.b, undefined, 'provided settings object should be cloned')
+        test.equal(Database.defaultSettings.a, undefined, 'instance settings should not affect default settings')
+        test.equal(Database.defaultSettings.b, undefined, 'instance settings should not affect default settings')
 
         test.end()
     })

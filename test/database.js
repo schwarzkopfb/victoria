@@ -4,6 +4,12 @@
 
 'use strict'
 
+// this allows us to simply `tap test/*.js`
+if (module === require.main) {
+    require('tap').pass('yes')
+    return
+}
+
 // todo: replace 'tap' dev dependency, once my PR gets merged
 Object.prototype.extension = 'should not mess up anything'
 

@@ -13,11 +13,13 @@ const { inspect } = require('util'),
 
 db.connect(url)
 
+tap.tearDown(() => db.unref())
+
 // WARNING: this drops all the data in the selected database!
 db.client.flushdb()
 
 tap.test('basic functionality', test => {
-    co(function *() {
+    return co(function *() {
         let user = db.create('user', {
             username: 'test',
             age:      42
@@ -59,11 +61,6 @@ tap.test('basic functionality', test => {
         user = yield db.find('user', 'absent')
         test.equal(user, null, 'user should not be fetched')
     })
-        .then(() => {
-            test.end()
-            db.unref()
-        })
-        .catch(test.threw)
 })
 
 tap.test('inspections', test => {
@@ -191,6 +188,39 @@ tap.test('getters/setters', test => {
     test.equal(user.verified, false, 'boolean getter')
     user.verified = 'true'
     test.equal(user.verified, true, 'boolean getter')
+
+    test.test('special cases of boolean getter', test => {
+        return co(function *() {
+            yield user.save()
+
+            const key  = `user:${user.id}`,
+                  hset = value =>
+                      new Promise((ok, error) => {
+                          db.client.hset(key, 'verified', value, err => {
+                              if (err)
+                                  error(err)
+                              else
+                                  ok()
+                          })
+                      })
+
+            yield hset('true')
+            yield user.fetch('verified')
+            test.equal(user.verified, true, 'boolean getter')
+
+            yield hset('1')
+            yield user.fetch('verified')
+            test.equal(user.verified, true, 'boolean getter')
+
+            yield hset('false')
+            yield user.fetch('verified')
+            test.equal(user.verified, false, 'boolean getter')
+
+            yield hset('0')
+            yield user.fetch('verified')
+            test.equal(user.verified, false, 'boolean getter')
+        })
+    })
 
     test.end()
 })
