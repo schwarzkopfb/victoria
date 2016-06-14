@@ -7,11 +7,52 @@
 const { AssertionError } = require('assert'),
       only        = require('only'),
       Database    = require('..'),
-      tap         = require('tap'),
+      test        = require('tap'),
       db          = require('./database'),
       credentials = require('./credentials')
 
-tap.test('Schema methods', test => {
+test.test('exposition', test => {
+    test.type(Database, 'function', 'main export should be the `Database` constructor function')
+    const db = new Database
+    test.pass('`Database` constructor should be used with `new`')
+
+    test.type(Database.Schema, 'function', 'Database.Schema should be a constructor function')
+    const schema = new Database.Schema(db, 'test')
+    test.pass('`Schema` constructor should be used with `new`')
+
+    test.type(Database.Field, 'function', 'Database.Field should be a constructor function')
+    const field = new Database.Field(schema, 'test')
+    test.pass('`Field` constructor should be used with `new`')
+
+    test.type(Database.Model, 'function', 'Database.Model should be a constructor function')
+    new Database.Model(schema)
+    test.pass('`Model` constructor should be used with `new`')
+
+    test.type(Database.Validator, 'function', 'Database.Validator should be a constructor function')
+    new Database.Validator(field)
+    test.pass('`Validator` constructor should be used with `new`')
+
+    test.type(Database.ValidationError, 'function', 'Database.ValidationError should be a descendant of assert.AssertionError')
+    const err = new Database.ValidationError(schema, field, 'test', '!=', 'test', 'test')
+    test.type(err, AssertionError, '`ValidationError` should be a descendant of assert.AssertionError');
+
+    [
+        'validators',
+        'constants',
+        'getters',
+        'setters',
+        'symbols'
+    ]
+        .forEach(name => {
+            const exp = Database[ name ]
+            test.type(exp, 'object', `${name} should be exposed`)
+            test.ok(Object.keys(exp).length, `${name} should contain at least one key`)
+        })
+
+    test.end()
+})
+
+test.test('Schema methods', test => {
     const user   = db.create('user'),
           schema = db.schemas.user,
           desc   = schema.descriptor
@@ -22,7 +63,7 @@ tap.test('Schema methods', test => {
     test.end()
 })
 
-tap.test('Schema definition assertions', test => {
+test.test('Schema definition assertions', test => {
     test.doesNotThrow(
         () => db.create('user'),
         'schema name should be asserted'
@@ -92,7 +133,7 @@ tap.test('Schema definition assertions', test => {
     test.end()
 })
 
-tap.test('Database api', test => {
+test.test('Database api', test => {
     test.throws(
         () => db.client = 42,
         TypeError,

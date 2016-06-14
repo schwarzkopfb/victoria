@@ -4,13 +4,13 @@
 
 'use strict'
 
-const tap = require('tap'),
-      db  = require('./database')
+const test = require('tap').test,
+      db   = require('./database')
 
 function noop() {
 }
 
-function test(name, schema, fn, resolved, rejected) {
+function doTest(name, schema, fn, resolved, rejected) {
     if (typeof schema !== 'string') {
         fn     = schema
         schema = 'user'
@@ -27,7 +27,7 @@ function test(name, schema, fn, resolved, rejected) {
     if (fn)
         fn(entity)
 
-    tap.test(name, test => {
+    test(name, test => {
         try {
             entity.validate()
             resolved(test, entity)
@@ -42,7 +42,7 @@ function test(name, schema, fn, resolved, rejected) {
 }
 
 function fail(name, schema, fn) {
-    test(
+    doTest(
         name, schema, fn,
         (test, res) =>
             test.notOk(res, 'unexpected result')
@@ -50,7 +50,7 @@ function fail(name, schema, fn) {
 }
 
 function pass(name, schema, fn) {
-    test(
+    doTest(
         name, schema, fn,
 
         (test, res) =>

@@ -6,7 +6,7 @@
 
 // this allows us to simply `tap test/*.js`
 if (module === require.main) {
-    require('tap').pass('yes')
+    require('tap').pass('done')
     return
 }
 
@@ -20,7 +20,8 @@ const user = {
     username:      {
         type:       String,
         minlength:  2,
-        max_length: 5
+        max_length: 5,
+        thisShouldBeSimplyIgnored: true
     },
     age:           {
         type: Number,
@@ -59,6 +60,11 @@ db.define('user', user)
 const { hostname }  = require('os'),
       { createHash } = require('crypto'),
       rating = {
+          // user specified id field
+          // now it's just a fallback to the internal spec,
+          // but it should be recognised by the schema parser
+          id: String,
+
           userId: {
               type:     String,
               required: true

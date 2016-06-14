@@ -6,19 +6,19 @@
 
 const { inspect } = require('util'),
       co  = require('co'),
-      tap = require('tap'),
+      test = require('tap'),
       db  = require('./database'),
       { Model } = require('..'),
       { url } = require('./credentials')
 
 db.connect(url)
 
-tap.tearDown(() => db.unref())
+test.tearDown(() => db.unref())
 
 // WARNING: this drops all the data in the selected database!
 db.client.flushdb()
 
-tap.test('basic functionality', test => {
+test.test('basic functionality', test => {
     return co(function *() {
         let user = db.create('user', {
             username: 'test',
@@ -63,7 +63,7 @@ tap.test('basic functionality', test => {
     })
 })
 
-tap.test('inspections', test => {
+test.test('inspections', test => {
     let user = db.create('user'),
         def  = { age: 42 },
         ins  = '{ age: 42 }'
@@ -106,7 +106,7 @@ tap.test('inspections', test => {
     test.end()
 })
 
-tap.test('default values', test => {
+test.test('default values', test => {
     const now    = Date.now(),
           rating = db.create('rating')
 
@@ -138,7 +138,7 @@ tap.test('default values', test => {
     }, 1)
 })
 
-tap.test('static methods', test => {
+test.test('static methods', test => {
     const user = db.create('user')
 
     test.doesNotThrow(
@@ -156,7 +156,7 @@ tap.test('static methods', test => {
     test.end()
 })
 
-tap.test('getters/setters', test => {
+test.test('getters/setters', test => {
     const now    = new Date,
           user   = db.create('user', {
               age: '42'

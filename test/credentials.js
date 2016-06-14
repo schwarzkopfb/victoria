@@ -6,7 +6,7 @@
 
 // this allows us to simply `tap test/*.js`
 if (module === require.main) {
-    require('tap').pass('yes')
+    require('tap').pass('done')
     return
 }
 
