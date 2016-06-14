@@ -15,6 +15,7 @@ exports = module.exports = require('./lib/Database');
     'validators',
     'constants',
     'getters',
-    'setters'
+    'setters',
+    'symbols'
 ]
     .forEach(m => exports[ m ] = require(`./lib/${m}`))
