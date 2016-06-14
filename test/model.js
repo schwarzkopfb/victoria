@@ -5,9 +5,9 @@
 'use strict'
 
 const { inspect } = require('util'),
-      co  = require('co'),
+      co   = require('co'),
       test = require('tap'),
-      db  = require('./database'),
+      db   = require('./database'),
       { Model } = require('..'),
       { url } = require('./credentials')
 

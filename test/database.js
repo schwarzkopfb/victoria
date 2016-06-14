@@ -19,8 +19,8 @@ const Database = require('..'),
 const user = {
     username:      {
         type:       String,
-        minlength:  2,
-        max_length: 5,
+        minlength:  2, // alias for minLength
+        max_length: 5, // alias for maxLength
         thisShouldBeSimplyIgnored: true
     },
     age:           {
