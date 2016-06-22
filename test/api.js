@@ -6,6 +6,7 @@
 
 const { AssertionError } = require('assert'),
       only        = require('only'),
+      manifest    = require('../package.json'),
       Database    = require('..'),
       test        = require('tap'),
       db          = require('./database'),
@@ -15,6 +16,8 @@ test.test('exposition', test => {
     test.type(Database, 'function', 'main export should be the `Database` constructor function')
     const db = new Database
     test.pass('`Database` constructor should be used with `new`')
+
+    test.strictEqual(Database, Database.Database, 'Database should have a static reference to itself')
 
     test.type(Database.Schema, 'function', 'Database.Schema should be a constructor function')
     const schema = new Database.Schema(db, 'test')
@@ -48,6 +51,8 @@ test.test('exposition', test => {
             test.type(exp, 'object', `${name} should be exposed`)
             test.ok(Object.keys(exp).length, `${name} should contain at least one key`)
         })
+
+    test.equal(Database.version, manifest.version, 'module version should be exposed')
 
     test.end()
 })

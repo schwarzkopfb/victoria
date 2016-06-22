@@ -7,6 +7,7 @@
 exports = module.exports = require('./lib/Database');
 
 [
+    'Database',
     'Schema',
     'Field',
     'Model',
@@ -19,3 +20,5 @@ exports = module.exports = require('./lib/Database');
     'symbols'
 ]
     .forEach(m => exports[ m ] = require(`./lib/${m}`))
+
+exports.version = require('./package.json').version // todo: test it!
