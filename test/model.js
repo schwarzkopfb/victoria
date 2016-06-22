@@ -79,8 +79,9 @@ test.test('inspections', test => {
     user.age = 42
 
     test.same(user, def, 'model should contain the initialized fields')
-    test.same(user.toJSON(), def, "an empty model's json should contain the initialized fields")
-    test.same(user.inspect(), def, '`model.inspect()` should be just an alias for `model.toJSON()`')
+    test.same(user.toObject(), def, "an empty model's json should contain the initialized fields")
+    test.same(user.toJSON(), def, '`model.toJSON()` should be just an alias for `model.toObject()`')
+    test.same(user.inspect(), def, '`model.inspect()` should be just an alias for `model.toObject()`')
     test.equal(inspect(user), ins, 'model should be inspected correctly')
 
     test.equal(user.age, 42, 'model property should be accessible')
@@ -276,8 +277,6 @@ test.test('getters/setters', test => {
     test.same(profile5, user2.profile5, "`field: { type: 'json' }` syntax should work either #2")
     test.notEqual(profile5, user2.profile5, "`field: { type: 'json' }` syntax should work either #3")
     test.same(JSON.parse(serialized5), user2.profile5, "`field: { type: 'json' }` syntax should work either #4")
-
-    // todo: test other type aliases as well! (e.g. `type: 'num'`)
 
     test.end()
 })
