@@ -38,7 +38,7 @@ const user = {
         length: 4
     },
     email:         {
-        type:  String,
+        type:  'string', // type alias
         email: true
     },
     verified:      Boolean,
@@ -47,7 +47,7 @@ const user = {
         match: /[A-Z]-[1-9][0-9]{3}-[1-9][0-9]{3}/
     },
     favoriteDay:   {
-        type: String,
+        type: 'str', // type alias
         enum: [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ]
     },
     maxLengthTest: {
@@ -55,9 +55,14 @@ const user = {
         maxLength: -1 // pointless
     },
     odd:           {
-        type:     Number,
+        type:     'number', // type alias
         validate: value => value % 2
-    }
+    },
+    profile:       { json: true },
+    profile2:      JSON,
+    profile3:      { type: JSON },
+    profile4:      { type: 'JSON' },
+    profile5:      { type: 'json' }
 }
 
 db.define('user', user)
@@ -76,7 +81,7 @@ const { hostname }  = require('os'),
           },
 
           value: {
-              type:     Number,
+              type:     'num', // type alias
               required: true,
               min:      1,
               max:      5,
@@ -89,7 +94,7 @@ const { hostname }  = require('os'),
           },
 
           timestamp: {
-              type:    Date,
+              type:    'date', // type alias
               default: Date.now
           },
 
@@ -110,7 +115,9 @@ const { hostname }  = require('os'),
               getter: value => Array.from(value)
                                     .reverse()
                                     .join('')
-          }
+          },
+          bool1:       { type: 'boolean' }, // type alias
+          bool2:       { type: 'bool' } // type alias
       }
 
 db.define({ rating })

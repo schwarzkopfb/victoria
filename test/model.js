@@ -178,9 +178,9 @@ test.test('getters/setters', test => {
     rating.timestamp = num
     test.equal(+rating.timestamp, num, 'date getter')
     rating.value = 5
-    test.equal(rating.value, 5, 'fixed number getter')
+    test.equal(rating.value, '5.0', 'fixed number getter')
     rating.value = Math.PI
-    test.equal(rating.value, 3.1, 'fixed number getter')
+    test.equal(rating.value, '3.1', 'fixed number getter')
 
     user.verified = true
     test.equal(user.verified, true, 'boolean getter')
@@ -237,6 +237,47 @@ test.test('getters/setters', test => {
     test.equal(user2.password, '', 'md5 setter should return empty string if a falsy value has been provided')
     user2.password = ''
     test.equal(user2.password, '', 'md5 setter should return empty string if a falsy value has been provided')
+
+    const profile = user2.profile = {
+        test: 42,
+        a:    {
+            b: {
+                c: [ 'hello', 'victori', { a: '!' } ]
+            }
+        }
+    }
+
+    const serialized = user2.toObject().profile
+    test.type(serialized, 'string', 'json field should be serialized')
+    test.same(profile, user2.profile, 'json field should be parsed back')
+    test.notEqual(profile, user2.profile, 'parsed json field should have a new reference')
+    test.same(JSON.parse(serialized), user2.profile, 'json field should be parsed properly')
+    const profile2 = user2.profile2 = { a: 42 },
+          serialized2 = user2.toObject().profile2
+    test.type(serialized2, 'string', '`field: JSON` syntax should work either #1')
+    test.same(profile2, user2.profile2, '`field: JSON` syntax should work either #2')
+    test.notEqual(profile2, user2.profile2, '`field: JSON` syntax should work either #3')
+    test.same(JSON.parse(serialized2), user2.profile2, '`field: JSON` syntax should work either #4')
+    const profile3 = user2.profile3 = { test: [ 'a', 'r', 'r', 'a', 'y' ] },
+          serialized3 = user2.toObject().profile3
+    test.type(serialized3, 'string', '`field: { type: JSON }` syntax should work either #1')
+    test.same(profile3, user2.profile3, '`field: { type: JSON }` syntax should work either #2')
+    test.notEqual(profile3, user2.profile3, '`field: { type: JSON }` syntax should work either #3')
+    test.same(JSON.parse(serialized3), user2.profile3, '`field: { type: JSON }` syntax should work either #4')
+    const profile4 = user2.profile4 = { 'this contains spaces': 'as well', _: null },
+          serialized4 = user2.toObject().profile4
+    test.type(serialized4, 'string', "`field: { type: 'JSON' }` syntax should work either #1")
+    test.same(profile4, user2.profile4, "`field: { type: 'JSON' }` syntax should work either #2")
+    test.notEqual(profile4, user2.profile4, "`field: { type: 'JSON' }` syntax should work either #3")
+    test.same(JSON.parse(serialized4), user2.profile4, "`field: { type: 'JSON' }` syntax should work either #4")
+    const profile5 = user2.profile5 = [ 'arrays', 'should', 'also', 'work', '!' ],
+          serialized5 = user2.toObject().profile5
+    test.type(serialized5, 'string', "`field: { type: 'json' }` syntax should work either #1")
+    test.same(profile5, user2.profile5, "`field: { type: 'json' }` syntax should work either #2")
+    test.notEqual(profile5, user2.profile5, "`field: { type: 'json' }` syntax should work either #3")
+    test.same(JSON.parse(serialized5), user2.profile5, "`field: { type: 'json' }` syntax should work either #4")
+
+    // todo: test other type aliases as well! (e.g. `type: 'num'`)
 
     test.end()
 })
