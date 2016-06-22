@@ -264,3 +264,104 @@ test.test('Database api', test => {
 
     test.end()
 })
+
+test.test('extensions', test => {
+    function myTestGetter() {
+        return v => v * 2
+    }
+
+    function myTestSetter() {
+        return v => v / 2
+    }
+
+    const Validator = Database.Validator
+
+    class MyValidator extends Validator {
+        test(value) {
+            if (value <= 42)
+                return
+
+            this.fail(null, null, null, 'oh no!')
+        }
+    }
+
+    Database.register.getter('test', myTestGetter)
+    Database.register.setter('test', myTestSetter)
+    Database.register.validator('test', MyValidator)
+
+    db.define('test', {
+        test: {
+            type:    Number,
+            default: 1,
+            test:    true
+        }
+    })
+
+    // getter
+
+    const entity = db.create('test')
+
+    test.equal(entity.test, 2, 'custom getter should be registered')
+
+    // setter
+
+    entity.test = 4
+
+    test.equal(entity.toObject().test, 2, 'custom setter should be registered')
+
+    // validator
+
+    test.doesNotThrow(() => entity.validate(), 'custom validator should not fail')
+    entity.test = 420
+    test.throws(() => entity.validate(), Database.ValidationError, 'custom validator should fail')
+
+    // validator aliasing
+
+    class TestError extends Error {
+    }
+
+    class tv1 extends Validator {
+        test() {
+            throw new TestError
+        }
+    }
+
+    tv1.alias = 't1'
+
+    class tv2 extends Validator {
+        test() {
+            throw new TestError
+        }
+    }
+
+    tv2.aliases = [ 't2_1', 't2_2' ]
+
+    Database.register.validator('test1', tv1)
+    Database.register.validator('test2', tv2)
+
+    db.define('test_alias1', {
+        f: { t1: true }
+    })
+
+    const ta1 = db.create('test_alias1', { f: 1 })
+
+    test.throws(
+        () => ta1.validate(),
+        TestError,
+        'custom validator aliases should work'
+    )
+
+    db.define('test_alias2', {
+        f: { t2_2: true }
+    })
+
+    const ta2 = db.create('test_alias1', { f: 1 })
+
+    test.throws(
+        () => ta2.validate(),
+        TestError,
+        'custom validator aliases should work'
+    )
+
+    test.end()
+})
