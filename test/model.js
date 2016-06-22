@@ -277,6 +277,10 @@ test.test('getters/setters', test => {
     test.same(profile5, user2.profile5, "`field: { type: 'json' }` syntax should work either #2")
     test.notEqual(profile5, user2.profile5, "`field: { type: 'json' }` syntax should work either #3")
     test.same(JSON.parse(serialized5), user2.profile5, "`field: { type: 'json' }` syntax should work either #4")
+    ////
+    Model.getData(user2).profile = 'test' // overwrite internal data with invalid json
+    test.doesNotThrow(() => user2.profile, 'json parse error should be ignored')
+    test.equal(user2.profile, null, 'invalid json should result in `null`')
 
     test.end()
 })
