@@ -26,7 +26,8 @@ const user = {
     age:           {
         type: Number,
         min:  0,
-        max:  99
+        max:  99,
+        int: true
     },
     birthDate:     Date,
     birthYear:     {

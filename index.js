@@ -21,4 +21,4 @@ exports = module.exports = require('./lib/Database');
 ]
     .forEach(m => exports[ m ] = require(`./lib/${m}`))
 
-exports.version = require('./package.json').version // todo: test it!
+exports.version = require('./package.json').version
