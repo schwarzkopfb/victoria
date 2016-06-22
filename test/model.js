@@ -177,6 +177,10 @@ test.test('getters/setters', test => {
     test.equal(+rating.timestamp, num, 'date getter')
     rating.timestamp = num
     test.equal(+rating.timestamp, num, 'date getter')
+    rating.value = 5
+    test.equal(rating.value, 5, 'fixed number getter')
+    rating.value = Math.PI
+    test.equal(rating.value, 3.1, 'fixed number getter')
 
     user.verified = true
     test.equal(user.verified, true, 'boolean getter')
@@ -221,6 +225,18 @@ test.test('getters/setters', test => {
             test.equal(user.verified, false, 'boolean getter')
         })
     })
+
+    const password = 'victoria',
+          user2    = db.create('user', { password }),
+          hash     = require('crypto').createHash('md5')
+                                      .update(password)
+                                      .digest('hex')
+
+    test.equal(user2.password, hash, "md5 setter should hash the user's password")
+    user2.password = null
+    test.equal(user2.password, '', 'md5 setter should return empty string if a falsy value has been provided')
+    user2.password = ''
+    test.equal(user2.password, '', 'md5 setter should return empty string if a falsy value has been provided')
 
     test.end()
 })

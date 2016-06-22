@@ -18,16 +18,20 @@ const Database = require('..'),
 
 const user = {
     username:      {
-        type:       String,
-        minlength:  2, // alias for minLength
-        max_length: 5, // alias for maxLength
-        thisShouldBeSimplyIgnored: true
+        type:                      String,
+        minlength:                 2, // alias for minLength
+        max_length:                5, // alias for maxLength
+        thisShouldBeSimplyIgnored: true // todo: or maybe an error should be raised instead...
+    },
+    password:      {
+        type: String,
+        md5:  true
     },
     age:           {
         type: Number,
         min:  0,
         max:  99,
-        int: true
+        int:  true
     },
     birthDate:     Date,
     birthYear:     {
@@ -75,7 +79,8 @@ const { hostname }  = require('os'),
               type:     Number,
               required: true,
               min:      1,
-              max:      5
+              max:      5,
+              fixed:    1
           },
 
           text: {
