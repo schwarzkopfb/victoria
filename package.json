@@ -9,6 +9,7 @@
     "cloc": "cloc lib test"
   },
   "dependencies": {
+    "escape-html": "^1.0.3",
     "redis": "^2.6.0-2"
   },
   "engines": {
