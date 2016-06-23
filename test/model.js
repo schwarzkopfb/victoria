@@ -183,6 +183,21 @@ test.test('getters/setters', test => {
     test.equal(rating.value, '5.0', 'fixed number getter')
     rating.value = Math.PI
     test.equal(rating.value, '3.1', 'fixed number getter')
+    test.throws(
+        () => db.define('fixed_getter_test', { f: { fixed: 'test' } }),
+        AssertionError,
+        'fixed number getter should assert `digits` parameter'
+    )
+    test.throws(
+        () => db.define('fixed_getter_test', { f: { fixed: -1 } }),
+        AssertionError,
+        'fixed number getter should assert `digits` parameter'
+    )
+    test.throws(
+        () => db.define('fixed_getter_test', { f: { fixed: Math.PI } }),
+        AssertionError,
+        'fixed number getter should assert `digits` parameter'
+    )
 
     user.verified = true
     test.equal(user.verified, true, 'boolean getter')
@@ -253,6 +268,79 @@ test.test('getters/setters', test => {
             AssertionError,
             '`to` should be integer'
         )
+
+        test.end()
+    })
+
+    test.test('escape setter', test => {
+        test.throws(
+            () => db.define('escape_setter_test', {
+                text: { escape: 'fake' }
+            }),
+            AssertionError,
+            'escape type should be asserted'
+        )
+        test.doesNotThrow(
+            () => db.define('escape_setter_test', {
+                html: { escape: 'html' },
+                js:   { escape: 'js' },
+                js2:  { escape: 'javascript' },
+                js3:  { escape: 'JavaScript' }
+            }),
+            'escape should not throw if a valid type is provided'
+        )
+
+        const js      = "var test = 'test';\nalert('you are hacked!')\u001F",
+              escaped = 'var test \\u003D \\u0027test\\u0027\\u003B\\u000Aalert(\\u0027you are hacked!\\u0027)\\u001F',
+              entity  = db.create('escape_setter_test', {
+                  html: '<h1>Winter is coming!</h1>',
+                  js:   js,
+                  js2:  js,
+                  js3:  js
+              })
+
+        test.equal(entity.html, '&lt;h1&gt;Winter is coming!&lt;/h1&gt;')
+        test.equal(entity.js, escaped)
+        test.equal(entity.js2, escaped)
+        test.equal(entity.js3, escaped)
+
+        test.end()
+    })
+
+    test.test('upperCase/lowerCase getters', test => {
+        db.define('case_getters_test', {
+            lower:  { lower: true },
+            lower2: { lowercase: true },
+            lower3: { lowerCase: true },
+            lower4: { lowerCase: true },
+            upper:  { upper: true },
+            upper2: { uppercase: true },
+            upper3: { upperCase: true },
+            upper4: { upperCase: true }
+        })
+
+        const text   = 'Lorem Ipsum',
+              lower  = 'lorem ipsum',
+              upper  = 'LOREM IPSUM',
+              entity = db.create('case_getters_test', {
+                  lower:  text,
+                  lower2: text,
+                  lower3: text,
+                  lower4: null,
+                  upper:  text,
+                  upper2: text,
+                  upper3: text,
+                  upper4: null
+              })
+
+        test.equal(entity.lower, lower)
+        test.equal(entity.lower2, lower)
+        test.equal(entity.lower3, lower)
+        test.equal(entity.lower4, '')
+        test.equal(entity.upper, upper)
+        test.equal(entity.upper2, upper)
+        test.equal(entity.upper3, upper)
+        test.equal(entity.upper4, '')
 
         test.end()
     })
