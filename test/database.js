@@ -91,7 +91,26 @@ const { hostname }  = require('os'),
 
           text: {
               type:    String,
-              default: '-'
+              default: '-',
+              cut: { from: 6 }
+          },
+          text2: {
+              cut: { start: 6 }
+          },
+          text3: {
+              cut: { to: 5 }
+          },
+          text4: {
+              cut: { end: 5 }
+          },
+          text5: {
+              cut: { from: 6, end: 8 }
+          },
+          text6: {
+              cut: 5
+          },
+          text7: {
+              cut: { start: 0, to: 1 }
           },
 
           timestamp: {

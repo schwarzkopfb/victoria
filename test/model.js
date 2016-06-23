@@ -5,6 +5,7 @@
 'use strict'
 
 const { inspect } = require('util'),
+      { AssertionError } = require('assert'),
       co   = require('co'),
       test = require('tap'),
       db   = require('./database'),
@@ -197,6 +198,64 @@ test.test('getters/setters', test => {
     test.equal(user.customerId, '', 'trim setter with invalid value')
     user.customerId = '  Z-3241-5768 '
     test.equal(user.customerId, 'Z-3241-5768', 'trim setter')
+
+    test.test('cut setter', test => {
+        const text   = 'lorem ipsum',
+              rating = db.create('rating', {
+                  text:  text,
+                  text2: text,
+                  text3: text,
+                  text4: text,
+                  text5: text,
+                  text6: text,
+                  text7: null
+              })
+
+        test.equal(rating.text, 'ipsum')
+        test.equal(rating.text2, 'ipsum')
+        test.equal(rating.text3, 'lorem')
+        test.equal(rating.text4, 'lorem')
+        test.equal(rating.text5, 'ip')
+        test.equal(rating.text6, 'lorem')
+        test.equal(rating.text7, '')
+
+        test.throws(
+            () => db.define('cut_setter_test', { f: { cut: false } }),
+            AssertionError,
+            'no `start` nor `end` specified'
+        )
+        test.throws(
+            () => db.define('cut_setter_test', { f: { cut: { from: Infinity } } }),
+            AssertionError,
+            '`from: Infinity` is not valid'
+        )
+        test.throws(
+            () => db.define('cut_setter_test', { f: { cut: { from: -1 } } }),
+            AssertionError,
+            '`from: -1` is not valid'
+        )
+        test.throws(
+            () => db.define('cut_setter_test', { f: { cut: { from: Math.PI } } }),
+            AssertionError,
+            '`from` should be integer'
+        )
+        test.doesNotThrow(
+            () => db.define('cut_setter_test', { f: { cut: { to: Infinity } } }),
+            '`to: Infinity` is valid'
+        )
+        test.throws(
+            () => db.define('cut_setter_test2', { f: { cut: { to: -1 } } }),
+            AssertionError,
+            '`to: -1` is not valid'
+        )
+        test.throws(
+            () => db.define('cut_setter_test2', { f: { cut: { to: Math.PI } } }),
+            AssertionError,
+            '`to` should be integer'
+        )
+
+        test.end()
+    })
 
     test.test('special cases of boolean getter', test => {
         return co(function *() {
