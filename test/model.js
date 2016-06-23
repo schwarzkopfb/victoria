@@ -193,6 +193,10 @@ test.test('getters/setters', test => {
     test.equal(user.verified, false, 'boolean getter')
     user.verified = 'true'
     test.equal(user.verified, true, 'boolean getter')
+    user.customerId = null
+    test.equal(user.customerId, '', 'trim setter with invalid value')
+    user.customerId = '  Z-3241-5768 '
+    test.equal(user.customerId, 'Z-3241-5768', 'trim setter')
 
     test.test('special cases of boolean getter', test => {
         return co(function *() {

@@ -44,7 +44,8 @@ const user = {
     verified:      Boolean,
     customerId:    {
         type:  String,
-        match: /[A-Z]-[1-9][0-9]{3}-[1-9][0-9]{3}/
+        match: /[A-Z]-[1-9][0-9]{3}-[1-9][0-9]{3}/,
+        trim: true
     },
     favoriteDay:   {
         type: 'str', // type alias
