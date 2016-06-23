@@ -175,6 +175,50 @@ test.test('private fields', test => {
     test.end()
 })
 
+test.test('instance methods', test => {
+    test.test('select()', test => {
+        const user = db.create('user', {
+            username: 'test',
+            password: 'test',
+            age:      42,
+            email:    'test@example.com'
+        })
+
+        test.same(
+            user.select('username password'), { username: 'test' },
+            'private fields should not be selected by default'
+        )
+        test.same(
+            user.select([ 'username', 'password' ], true),
+            {
+                username: 'test',
+                password: '098f6bcd4621d373cade4e832627b4f6'
+            },
+            'private fields should be selected explicitly'
+        )
+
+        db.define('model_select_test', {
+            a: String,
+            b: { default: 'test' }
+        })
+
+        const entity = db.create('model_select_test')
+
+        test.same(entity.select('a'), {}) // `a` is empty
+        entity.a = 'test'
+        test.same(entity.select('a'), { a: 'test' })
+        test.same(
+            entity.select('a b'),
+            { a: 'test', b: 'test' },
+            'default value should be returned when an uninitialized field is selected'
+        )
+
+        test.end()
+    })
+
+    test.end()
+})
+
 test.test('static methods', test => {
     const user = db.create('user')
 
