@@ -24,8 +24,9 @@ const user = {
         thisShouldBeSimplyIgnored: true // todo: or maybe an error should be raised instead...
     },
     password:      {
-        type: String,
-        md5:  true
+        type:    String,
+        md5:     true,
+        private: true
     },
     age:           {
         type: Number,
@@ -45,7 +46,7 @@ const user = {
     customerId:    {
         type:  String,
         match: /[A-Z]-[1-9][0-9]{3}-[1-9][0-9]{3}/,
-        trim: true
+        trim:  true
     },
     favoriteDay:   {
         type: 'str', // type alias
@@ -89,10 +90,10 @@ const { hostname }  = require('os'),
               fixed:    1
           },
 
-          text: {
+          text:  {
               type:    String,
               default: '-',
-              cut: { from: 6 }
+              cut:     { from: 6 }
           },
           text2: {
               cut: { start: 6 }

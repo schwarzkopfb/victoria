@@ -140,6 +140,41 @@ test.test('default values', test => {
     }, 1)
 })
 
+test.test('private fields', test => {
+    const user = db.create('user', {
+        username: 'test',
+        password: 'test'
+    })
+
+    test.equal(
+        // note: there is also an md5 setter on pw field
+        user.password, '098f6bcd4621d373cade4e832627b4f6',
+        'private fields should be accessible directly'
+    )
+    test.doesNotThrow(
+        () => user.password = 'kitten',
+        'private fields should be accessible directly'
+    )
+    test.same(user.toObject(), { username: 'test' }, 'private fields should not be exposed')
+    test.equal(
+        JSON.stringify(user), '{"username":"test"}',
+        'private fields should not appear in serialized objects'
+    )
+    test.same(
+        Object.keys(user), [ 'username', 'password' ],
+        'private fields should be listen in `Object.keys()` result'
+    )
+
+    let found
+    for (let key in user)
+        if (key === 'password')
+            found = true
+
+    test.ok(found, 'private fields should be enumerated')
+
+    test.end()
+})
+
 test.test('static methods', test => {
     const user = db.create('user')
 
