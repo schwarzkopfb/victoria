@@ -104,8 +104,8 @@ With npm:
 
 ## Todo
 
-**General field list parsing & cache**
-**Better structure to cover Redis data types:**
+* General field list parsing & cache
+* Better structure to cover Redis data types:
 * `Model`
   * `Hash` (extract from the current `Model` implementation)
   * `Collection`
