@@ -7,7 +7,7 @@
 
 THIS PROJECT IS A WORK IN PROGRESS
 
-Simple object-hash relational mapper library for Redis, targeting Node.js 6 and above.
+Simple object-hash relational mapper library for [Redis](http://redis.io/), targeting [https://nodejs.org/](Node.js) 6 and above.
 
 ## Topics (to be explained later)
 
@@ -110,6 +110,10 @@ With npm:
 
     npm install victoria
 
+## Credits
+
+`victoria` borrows concepts and inspiration from [Michel Martens](http://soveran.com/)' [ohm](https://github.com/soveran/ohm).
+
 ## License
 
-[MIT license](https://github.com/schwarzkopfb/victoria/blob/master/LICENSE).
+[MIT license](https://github.com/schwarzkopfb/victoria/blob/master/LICENSE)
