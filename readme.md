@@ -7,34 +7,22 @@
 
 THIS PROJECT IS A WORK IN PROGRESS
 
-Simple object-hash relational mapper library for [Redis](http://redis.io/), targeting [https://nodejs.org/](Node.js) 6 and above.
+Simple object-hash relational mapper library for [Redis](http://redis.io/), targeting [Node.js](https://nodejs.org/) 6 and above.
 
 ## Topics (to be explained later)
 
-  * Model functionality
-    * Serialization & private fields (`toObject()`, `toJSON()`, `select()`)
-    * Update data
-    * Validation
-    * Setters
-    * Getters
-    * Dynamic defaults
-  * Indices
-  * References
-  * Record creation
-  * Querying
-  * CLI (coming soon)
-
-## Todo
-
- * General field list parsing & cache
- * More generic Model implementation
- * Better structure to cover Redis data types
-   * `Model`
-     * `Hash` (extract from the current `Model` implementation)
-     * `Collection`
-       * `Set`
-       * `SortedSet`
-       * `List`
+* Model functionality
+  * Serialization & private fields (`toObject()`, `toJSON()`, `select()`)
+  * Update data
+  * Validation
+  * Setters
+  * Getters
+  * Dynamic defaults
+* Indices
+* References
+* Record creation
+* Querying
+* CLI (coming soon)
 
 ## Usage
 
@@ -113,6 +101,17 @@ With npm:
 ## Credits
 
 `victoria` borrows concepts and inspiration from [Michel Martens](http://soveran.com/)' [ohm](https://github.com/soveran/ohm).
+
+## Todo
+
+**General field list parsing & cache**
+**Better structure to cover Redis data types:**
+* `Model`
+  * `Hash` (extract from the current `Model` implementation)
+  * `Collection`
+    * `Set`
+    * `SortedSet`
+    * `List`
 
 ## License
 
