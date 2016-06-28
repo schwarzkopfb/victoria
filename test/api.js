@@ -134,6 +134,11 @@ test.test('Schema definition assertions', test => {
         () => db.define('test8', { a: new Date }),
         '`Date` instance is a valid specifier'
     )
+    test.throws(
+        () => db.define('invalid_desc_prop_test', { a: { invalidDescriptorProperty: true } }),
+        AssertionError,
+        'invalid descriptor property should be asserted'
+    )
 
     test.end()
 })

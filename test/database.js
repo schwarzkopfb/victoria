@@ -18,10 +18,9 @@ const Database = require('..'),
 
 const user = {
     username:      {
-        type:                      String,
-        minlength:                 2, // alias for minLength
-        max_length:                5, // alias for maxLength
-        thisShouldBeSimplyIgnored: true // todo: or maybe an error should be raised instead...
+        type:       String,
+        minlength:  2, // alias for minLength
+        max_length: 5 // alias for maxLength
     },
     password:      {
         type:    String,

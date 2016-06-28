@@ -5,24 +5,12 @@
 
 # Victoria
 
-THIS PROJECT IS A WORK IN PROGRESS
-
 Simple object-hash relational mapper library for [Redis](http://redis.io/), targeting [Node.js](https://nodejs.org/) 6 and above.
 
-## Topics (to be explained later)
+## This project is a work in progress
 
-* Model functionality
-  * Serialization & private fields (`toObject()`, `toJSON()`, `select()`)
-  * Update data
-  * Validation
-  * Setters
-  * Getters
-  * Dynamic defaults
-* Indices
-* References
-* Record creation
-* Querying
-* CLI (coming soon)
+**Be aware!** Before the project reaches its first release-candidate version,
+APIs may change without warning and documentation may differ from the actual code base.
 
 ## Usage
 
@@ -101,6 +89,21 @@ With npm:
 ## Credits
 
 `victoria` borrows concepts and inspiration from [Michel Martens](http://soveran.com/)' [ohm](https://github.com/soveran/ohm).
+
+## Topics (to be explained later)
+
+* Model functionality
+  * Serialization & private fields (`toObject()`, `toJSON()`, `select()`)
+  * Update data
+  * Validation
+  * Setters
+  * Getters
+  * Dynamic defaults
+* Indices
+* References & population
+* Record creation
+* Querying
+* CLI (coming soon)
 
 ## Todo
 
