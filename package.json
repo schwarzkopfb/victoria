@@ -6,6 +6,7 @@
   "scripts": {
     "test": "tap test/*.js",
     "coverage": "npm run test -- --cov --coverage-report=lcov",
+    "test-cleanup": "node ./test/cleanup --interactive",
     "cloc": "cloc lib test"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "co": "^4.6.0",
+    "colors": "^1.1.2",
     "only": "0.0.2",
     "tap": "schwarzkopfb/node-tap"
   }

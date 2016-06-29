@@ -10,17 +10,26 @@ if (module === require.main) {
     return
 }
 
-const {
+const assert = require('assert'),
+      {
           DEV_REDIS_HOST: host,
           DEV_REDIS_PORT: port,
           DEV_REDIS_PASSWORD: password,
           DEV_REDIS_VICTORIA: db
       } = process.env
 
+assert(host, 'redis host not specified')
+assert(port, 'redis port not specified')
+assert(password, 'redis password not specified')
+assert.notEqual(db, undefined, 'redis database index not specified')
+
+const safeUrl = `redis://${host}:${port}/${db}`
+
 module.exports = {
     host,
     port,
     password,
     db,
-    url: `redis://${host}:${port}/${db}?password=${encodeURIComponent(password)}`
+    url: `${safeUrl}?password=${encodeURIComponent(password)}`,
+    safeUrl
 }

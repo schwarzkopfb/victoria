@@ -12,6 +12,17 @@ const { AssertionError } = require('assert'),
       db          = require('./database'),
       credentials = require('./credentials')
 
+// note:
+// redis module throws `TypeError: The options argument contains the property "extension" that is either unknown or of a wrong type`
+// so we need to temporally remove that extension before connection tests
+function removeObjectExtension() {
+    delete Object.prototype.extension
+}
+
+function restoreObjectExtension() {
+    Object.prototype.extension = 'should not mess up anything else'
+}
+
 test.test('exposition', test => {
     test.type(Database, 'function', 'main export should be the `Database` constructor function')
     const db = new Database
@@ -179,6 +190,9 @@ test.test('Database api', test => {
     })
 
     test.test('(re)connection', test => {
+        removeObjectExtension()
+        test.tearDown(restoreObjectExtension)
+
         const credUrl  = only(credentials, 'url'),
               credHPPD = only(credentials, [ 'host', 'port', 'password', 'db' ]),
               dbs      = [
@@ -195,6 +209,7 @@ test.test('Database api', test => {
 
         // 2
         let db      = dbs[ 1 ]
+        db.db       = credentials.db
         db.host     = credentials.host
         db.port     = credentials.host
         db.password = credentials.password
@@ -202,7 +217,7 @@ test.test('Database api', test => {
         dbs.forEach(db =>
                         test.doesNotThrow(
                             () => db.connect(),
-                            'db.connect() should be called again after disconnection'
+                            'db.connect() should be called once'
                         ))
 
         dbs.forEach(db =>

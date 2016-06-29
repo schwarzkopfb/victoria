@@ -35,8 +35,8 @@ db.id = (db, schema, model) => {
 db.define({ user })
   .connect(url)
 
-// WARNING: this drops all the data in the selected database!
-db.client.flushdb()
+// reset id counter (from previous test)
+db.client.del('id:user')
 
 test.test('custom id generator function #1', test => {
     db.create('user', { name: 'test' })

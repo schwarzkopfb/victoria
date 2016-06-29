@@ -12,12 +12,18 @@ const { inspect } = require('util'),
       { Model } = require('..'),
       { url } = require('./credentials')
 
+
+// note:
+// redis module throws `TypeError: The options argument contains the property "extension" that is either unkown or of a wrong type`
+// so we need to temporally remove that extension here...
+delete Object.prototype.extension
+
 db.connect(url)
 
-test.tearDown(() => db.unref())
+// ...and then we should restore it
+Object.prototype.extension = 'should not mess up anything else'
 
-// WARNING: this drops all the data in the selected database!
-db.client.flushdb()
+test.tearDown(() => db.unref())
 
 test.test('basic functionality', test => {
     return co(function *() {
