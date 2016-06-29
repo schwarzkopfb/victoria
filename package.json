@@ -19,6 +19,7 @@
   "devDependencies": {
     "co": "^4.6.0",
     "colors": "^1.1.2",
+    "coveralls": "^2.11.9",
     "only": "0.0.2",
     "tap": "schwarzkopfb/node-tap"
   }

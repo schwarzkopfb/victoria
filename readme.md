@@ -1,6 +1,8 @@
 [![view on npm](http://img.shields.io/npm/v/victoria.svg?style=flat-square)](https://www.npmjs.com/package/victoria)
-[![npm module downloads per month](http://img.shields.io/npm/dm/victoria.svg?style=flat-square)](https://www.npmjs.com/package/victoria)
+[![downloads per month](http://img.shields.io/npm/dm/victoria.svg?style=flat-square)](https://www.npmjs.com/package/victoria)
 [![node version](https://img.shields.io/badge/node-%3E=6-brightgreen.svg?style=flat-square)](https://nodejs.org/download)
+[![build status](https://img.shields.io/travis/schwarzkopfb/victoria.svg?style=flat-square)](https://travis-ci.org/schwarzkopfb/victoria)
+[![test coverage](https://img.shields.io/coveralls/schwarzkopfb/victoria.svg?style=flat-square)](https://coveralls.io/github/schwarzkopfb/victoria)
 [![license](https://img.shields.io/npm/l/express.svg?style=flat-square)](https://github.com/schwarzkopfb/victoria/blob/development/LICENSE)
 
 # Victoria
