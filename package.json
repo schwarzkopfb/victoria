@@ -1,6 +1,6 @@
 {
   "name": "victoria",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple object-hash relational mapper library for Redis, targeting Node.js 6 and above.",
   "main": "./index.js",
   "scripts": {
